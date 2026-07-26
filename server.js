@@ -1,0 +1,71 @@
+const express = require('express');
+const { exec } = require('child_process');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const ADMIN_ID = '8255361263'; // ادمین اصلی
+
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+// دیتابیس ساده برای ذخیره پروژه‌ها و ربات‌ها
+const DB_FILE = './database.json';
+
+function getDB() {
+    if (!fs.existsSync(DB_FILE)) {
+        fs.writeFileSync(DB_FILE, JSON.stringify({ bots: [] }, null, 2));
+    }
+    try {
+        return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    } catch (e) {
+        return { bots: [] };
+    }
+}
+
+function saveDB(data) {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+}
+
+// API خودکار ربات از گیت‌هاب برای ساخت
+app.post('/api/deploy', (req, res) => {
+    const { repo, token } = req.body;
+
+    if (!repo || !token) {
+        return res.status(400).json({ success: false, message: 'لطفاً ریپازیتوری و توکن را وارد کنید.' });
+    }
+
+    const db = getDB();
+    const botId = Date.now();
+
+    // کلون کردن از گیت‌هاب و اجرای ربات
+    const cloneCommand = `git clone https://github.com/${repo}.git temp_bot_${botId}`;
+
+    exec(cloneCommand, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Git clone error: ${error.message}`);
+            return res.status(500).json({ success: false, message: 'خطا در کلون کردن ریپازیتوری' });
+        }
+
+        // ذخیره اطلاعات ربات در دیتابیس داخلی
+        db.bots.push({ id: botId, repo, token, status: 'Running' });
+        saveDB(db);
+
+        res.json({
+            success: true,
+            message: `ربات با موفقیت از ریپازیتوری ${repo} دیپلوی شد.`,
+            botId: botId
+        });
+    });
+});
+
+// API دریافت لیست پروژه ها و ربات ها
+app.get('/api/bots', (req, res) => {
+    const db = getDB();
+    res.json(db.bots);
+});
+
+app.listen(PORT, () => {
+    console.log(`DANI OS Server is running on port ${PORT}`);
+});
