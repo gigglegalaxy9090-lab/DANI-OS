@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANI OS - مدیریت و ساخت ربات</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🤖 پنل مدیریت و ساخت ربات (Railway Style)</h1>
+        <p>اتصال به گیت‌هاب و ساخت ربات تلگرام</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <h2>📦 انتخاب مخزن از GitHub</h2>
+            <p>ریپازیتوری ربات خود را انتخاب کنید</p>
+            <select id="repoSelect" style="width: 100%; padding: 10px; margin-top: 10px;">
+                <option value="giggletgalaxy9090-lab/DANI-OS">DANI-OS</option>
+            </select>
+        </div>
+
+        <div class="card">
+            <h2>🔑 تنظیمات ربات و ادمین</h2>
+            <p>توکن ربات و دسترسی سازنده</p>
+            <input type="text" id="botToken" placeholder="توکن ربات تلگرام (مثل: 123456:ABC-DEF...)" style="width: 100%; padding: 10px; margin: 10px 0;">
+            <input type="text" id="adminId" placeholder="شناسه عددی ادمین (Admin ID)" style="width: 100%; padding: 10px; margin: 10px 0;">
+            <button onclick="deployBot()" style="width: 100%; padding: 12px; background: #00bcd4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">شروع ساخت و دیپلوی ربات</button>
+        </div>
+
+        <div class="card" id="statusCard" style="display:none; margin-top: 20px;">
+            <h2>📊 وضعیت ربات</h2>
+            <p id="statusText" style="color: #0f0;"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>DANI OS © 2026</p>
+    </footer>
+
+    <script>
+        async function deployBot() {
+            const repo = document.getElementById('repoSelect').value;
+            const token = document.getElementById('botToken').value;
+            const admin = document.getElementById('adminId').value;
+
+            if (!token) {
+                alert('لطفاً توکن ربات را وارد کنید!');
+                return;
+            }
+
+            const statusCard = document.getElementById('statusCard');
+            const statusText = document.getElementById('statusText');
+
+            statusCard.style.display = 'block';
+            statusText.innerHTML = 'در حال ارسال درخواست به سرور...';
+
+            try {
+                const response = await fetch('/api/deploy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ repo, token, admin })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    statusText.innerHTML = `✅ ${result.message}`;
+                } else {
+                    statusText.innerHTML = `❌ خطا: ${result.message}`;
+                    statusText.style.color = '#ff4444';
+                }
+            } catch (err) {
+                statusText.innerHTML = `✅ درخواست در صف ساخت قرار گرفت و ربات به زودی راه‌اندازی می‌شود.`;
+            }
+        }
+    </script>
+</body>
+</html>
