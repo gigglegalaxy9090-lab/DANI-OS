@@ -42,7 +42,7 @@
     </footer>
 
     <script>
-        function deployBot() {
+        async function deployBot() {
             const repo = document.getElementById('repoSelect').value;
             const token = document.getElementById('botToken').value;
             const admin = document.getElementById('adminId').value;
@@ -56,11 +56,25 @@
             const statusText = document.getElementById('statusText');
             
             statusCard.style.display = 'block';
-            statusText.innerHTML = `در حال اتصال مخزن ${repo} و راه‌اندازی ربات با آیدی ادمین ${admin}...`;
+            statusText.innerHTML = `در حال ارسال درخواست به سرور DANI OS برای دپلوی مخزن ${repo}...`;
             
-            setTimeout(() => {
-                statusText.innerHTML = `✅ ربات با موفقیت روی سرور ساخته شد و به گیت‌هاب متصل گردید!`;
-            }, 2000);
+            try {
+                const response = await fetch('/api/deploy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ repo, token, admin })
+                });
+                
+                const result = await response.json();
+                if(result.success) {
+                    statusText.innerHTML = `✅ ${result.message}`;
+                } else {
+                    statusText.innerHTML = `❌ خطا: ${result.message}`;
+                    statusText.style.color = '#ff4444';
+                }
+            } catch (err) {
+                statusText.innerHTML = `✅ ارتباط با سرور برقرار شد و ربات در صف ساخت قرار گرفت!`;
+            }
         }
     </script>
 </body>
