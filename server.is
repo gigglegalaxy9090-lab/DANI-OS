@@ -28,7 +28,7 @@ function saveDB(data) {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
 
-// خودکار ربات از گیت‌هاب برای ساخت و API
+// API خودکار ربات از گیت‌هاب برای ساخت
 app.post('/api/deploy', (req, res) => {
     const { repo, token } = req.body;
 
@@ -60,7 +60,7 @@ app.post('/api/deploy', (req, res) => {
     });
 });
 
-// دریافت لیست پروژه ها و ربات ها API
+// API دریافت لیست پروژه ها و ربات ها
 app.get('/api/bots', (req, res) => {
     const db = getDB();
     res.json(db.bots);
