@@ -3,525 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DANI OS - Ultimate Multi-World Game Studio & IbisPaint Importer</title>
+    <title>DANI WORLD: Ultimate My City Engine</title>
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --panel-bg: rgba(22, 27, 34, 0.9);
-            --accent-pink: #ff4081;
-            --accent-cyan: #00bcd4;
-            --accent-purple: #7b1fa2;
-            --text-color: #ffffff;
-            --border-glow: rgba(0, 188, 212, 0.3);
+            --bg-color: #0f172a;
+            --panel-bg: #ffffff;
+            --text-main: #1e293b;
+            --accent: #ec4899;
+            --accent-hover: #db2777;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-main);
-            color: var(--text-color);
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+            background: #0f172a;
+            color: var(--text-main);
             margin: 0;
             padding: 10px;
-            overflow-x: hidden;
-            user-select: none;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         header {
-            text-align: center;
-            margin-bottom: 10px;
-            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow);
         }
-        .animated-logo-container {
+        header h1 {
+            margin: 0;
+            font-size: 15px;
+            color: #0f172a;
+        }
+        .nav-path {
+            background: #fdf2f8;
+            color: #be185d;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 5px;
+            gap: 6px;
         }
-        .animated-logo {
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-            border-radius: 50%;
+        .main-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 0 20px rgba(255, 64, 129, 0.8);
-            animation: floatLogo 3s ease-in-out infinite;
-        }
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-5px) rotate(4deg); }
-        }
-        .main-layout {
-            display: flex;
-            gap: 15px;
-            max-width: 1600px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-        .settings-sidebar {
+            gap: 12px;
             flex: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 330px;
             background: var(--panel-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glow);
+            border-radius: 16px;
             padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-            min-width: 320px;
-            max-height: 84vh;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: var(--shadow);
             overflow-y: auto;
+            max-height: calc(100vh - 70px);
+            z-index: 10;
         }
-        .settings-sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .settings-sidebar::-webkit-scrollbar-thumb {
-            background: var(--accent-cyan);
-            border-radius: 3px;
-        }
-        .canvas-area {
-            flex: 3.5;
-            background: linear-gradient(135deg, #1a237e, #0d47a1);
-            border: 3px solid var(--accent-cyan);
-            border-radius: 12px;
-            height: 650px;
+        .sidebar::-webkit-scrollbar { width: 5px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .workspace {
+            flex: 1;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
-            transition: background 0.8s ease;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            border: 3px solid rgba(255, 255, 255, 0.8);
+        }
+        .section-group {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px;
         }
         .section-title {
-            font-size: 13px;
-            color: var(--accent-cyan);
-            margin-top: 12px;
-            margin-bottom: 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 3px;
+            font-size: 11px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-row {
-            display: flex;
-            gap: 6px;
+            color: var(--accent);
             margin-bottom: 6px;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
         }
-        .btn-custom {
-            background: linear-gradient(135deg, #2196f3, #1565c0);
-            color: white;
-            border: none;
-            padding: 7px 10px;
-            border-radius: 6px;
+        .btn-action {
+            background: #ffffff;
+            color: var(--text-main);
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            font-weight: bold;
-            font-size: 12px;
-            text-align: right;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .btn-custom:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.2);
-        }
-        .btn-special { background: linear-gradient(135deg, #ff4081, #c51162); }
-        .btn-fantasy { background: linear-gradient(135deg, #7b1fa2, #4a148c); }
-        .btn-dark { background: linear-gradient(135deg, #37474f, #212121); }
-        .btn-ai { background: linear-gradient(135deg, #009688, #004d40); }
-
-        .spawned-item {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #000;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            cursor: grab;
-            user-select: none;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.8);
-            transition: transform 0.1s;
-            background-size: cover;
-            background-position: center;
-        }
-        .spawned-item:active {
-            cursor: grabbing;
-            transform: scale(1.05);
-        }
-        .magical-fx {
-            position: absolute;
-            pointer-events: none;
-            font-size: 35px;
-            animation: fxAnim 1.5s linear forwards;
-            z-index: 50;
-        }
-        @keyframes fxAnim {
-            0% { transform: scale(0.5) translateY(0); opacity: 1; filter: drop-shadow(0 0 10px #ffeb3b); }
-            100% { transform: scale(1.8) translateY(-80px); opacity: 0; filter: drop-shadow(0 0 25px #ff4081); }
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-        }
-        .modal-content {
-            background: #1e1e2f;
-            border: 2px solid var(--accent-cyan);
-            padding: 20px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 700px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 0 30px rgba(0,188,212,0.4);
-        }
-        .close-modal {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            float: left;
-            font-weight: bold;
-        }
-        .security-banner {
-            background: rgba(0, 230, 118, 0.15);
-            border: 1px solid #00e676;
-            color: #00e676;
-            padding: 4px 8px;
-            border-radius: 4px;
+            font-weight: 600;
             font-size: 11px;
-            text-align: center;
-            margin-bottom: 8px;
+            text-align: right;
+            margin-bottom: 5px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        input[type="text"] {
-            background: #12121a;
-            border: 1px solid var(--accent-cyan);
-            color: white;
-            padding: 7px;
-            border-radius: 5px;
+        .btn-action:hover {
+            background: #fdf2f8;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            color: #ffffff;
+        }
+        input[type="text"], select {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--text-main);
+            padding: 7px 10px;
+            border-radius: 6px;
             width: 100%;
             box-sizing: border-box;
             margin-bottom: 6px;
+            font-size: 11px;
+            outline: none;
+        }
+        
+        /* Game Entities & Rooms */
+        .game-entity {
+            position: absolute;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            touch-action: none;
+        }
+        .game-entity:active { cursor: grabbing; }
+        
+        .entity-icon {
+            font-size: 38px;
+            background: #ffffff;
+            width: 65px;
+            height: 65px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-size: cover;
+            background-position: center;
+        }
+        .entity-label-box {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            margin-top: 3px;
+        }
+        .entity-label {
+            background: rgba(15, 23, 42, 0.85);
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 9px;
+            white-space: nowrap;
+            border: none;
+        }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            font-size: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-bar {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
         }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <header>
-        <div class="animated-logo-container">
-            <div class="animated-logo">✨</div>
-            <div>
-                <h1 id="ui-title" style="margin: 0; font-size: 20px; text-shadow: 0 0 10px var(--accent-cyan);">DANI WORLD ENGINE STUDIO</h1>
-                <p id="ui-subtitle" style="margin: 2px 0 0 0; font-size: 11px; color: #b0bec5;">موتور بازی‌سازی همراه با ابزار آپلود و ورود نقاشی‌های ایبیس‌پینت</p>
-            </div>
-            <div class="animated-logo" style="animation-direction: reverse;">🔮</div>
-        </div>
+        <h1>🏙️ DANI WORLD: My City Engine</h1>
+        <div class="nav-path" id="navPath">محیط: نمای اصلی شهر (World Map)</div>
     </header>
 
-    <div class="main-layout">
-        
-        <!-- پنل تنظیمات و ابزارها -->
-        <div class="settings-sidebar">
-            <div class="security-banner">🛡️ سیستم آپلود ایبیس‌پینت و چیدمان فعال</div>
-
-            <!-- بخش جدید: ورود عکس و نقاشی از ایبیس‌پینت -->
-            <div class="section-title">🎨 ورود نقاشی و عکس از IbisPaint</div>
-            <p style="font-size: 11px; color: #b0bec5; margin: 0 0 5px 0;">نقاشی ذخیره‌شده‌ات را انتخاب کن تا به عنوان وسیله یا کاراکتر بیاید توی بازی:</p>
-            <input type="file" id="ibisImageLoader" accept="image/*" style="display: none;" onchange="loadIbisImage(event)">
-            <button class="btn-custom btn-special" onclick="document.getElementById('ibisImageLoader').click()">🖼️ آپلود عکس / نقاشی از گالری (IbisPaint)</button>
-
-            <!-- نصب روی گوشی -->
-            <div class="section-title">📱 نصب سریع بازی روی گوشی</div>
-            <button class="btn-custom btn-special" onclick="installAppPrompt()">📲 افزودن بازی به صفحه اصلی گوشی</button>
-
-            <!-- تنظیمات نمایش -->
-            <div class="section-title">🌐 تنظیمات نمایش و زبان</div>
-            <div class="btn-row">
-                <button class="btn-custom btn-special" onclick="toggleLanguage()" style="flex: 1;">🌐 <span id="lang-btn-text">English / فارسی</span></button>
-                <button class="btn-custom" onclick="adjustZoom(0.1)" style="flex: 0.5;">🔍 -</button>
-                <button class="btn-custom" onclick="adjustZoom(-0.1)" style="flex: 0.5;">🔍 +</button>
+    <div class="main-container">
+        <!-- پنل ابزار و امکانات بی‌نهایت -->
+        <div class="sidebar">
+            <div class="section-group" id="worldNavSection">
+                <div class="section-title">🗺️ ناوبری جهان و نقشه‌ها</div>
+                <button class="btn-action" onclick="goHomeMap()">🌍 بازگشت به نمای شهر اصلی</button>
             </div>
 
-            <!-- ساخت اتاق جدید -->
-            <div class="section-title">🏗️ ساخت اتاق یا مکان جدید</div>
-            <input type="text" id="newRoomNameInput" placeholder="نام اتاق جدید...">
-            <button class="btn-custom btn-fantasy" onclick="createCustomRoomFromUI()">➕ ساخت و ورود به اتاق جدید</button>
+            <div class="section-group">
+                <div class="section-title">🏗️ ساخت ساختمان، منزل، بیمارستان و مدرسه</div>
+                <input type="text" id="buildingNameInput" placeholder="نام دلخواه (مثل: منزل لیدی‌باگ، بیمارستان مرکزی)...">
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn-action btn-primary" onclick="addBuilding('🏠', 'منزل مسکونی')">➕ منزل</button>
+                    <button class="btn-action btn-primary" onclick="addBuilding('🏥', 'بیمارستان')">➕ بیمارستان</button>
+                    <button class="btn-action btn-primary" onclick="addBuilding('🏫', 'مدرسه')">➕ مدرسه</button>
+                </div>
+            </div>
 
-            <div class="section-title">🏠 مدیریت اتاق‌ها</div>
-            <button class="btn-custom" onclick="addNewRoom('اتاق خواب مدرن', 'linear-gradient(135deg, #e0f7fa, #80deea)')">🛏️ اتاق خواب مدرن</button>
-            <button class="btn-custom btn-fantasy" onclick="addNewRoom('قصر جادویی الف‌ها', 'linear-gradient(135deg, #4a148c, #7b1fa2)')">🏰 قصر جادویی الف‌ها</button>
-            <button class="btn-custom btn-dark" onclick="addNewRoom('قلمرو تاریک و دیوها', 'linear-gradient(135deg, #121212, #212121)')">🔥 قلمرو تاریک شیطان و دیو</button>
+            <div class="section-group" id="roomCreatorGroup" style="display:none;">
+                <div class="section-title">🚪 ساخت اتاق‌های داخل ساختمان</div>
+                <input type="text" id="roomNameInput" placeholder="نام اتاق (مثل: اتاق خواب، آشپزخانه، اورژانس)...">
+                <button class="btn-action btn-primary" onclick="addRoomToBuilding()">➕ افزودن اتاق جدید به این ساختمان</button>
+            </div>
 
-            <div class="section-title">🗺️ نقشه کلی جهان‌ها</div>
-            <button class="btn-custom" onclick="switchWorldMap('human')">🏙️ نقشه دنیای انسان‌ها</button>
-            <button class="btn-custom btn-fantasy" onclick="switchWorldMap('fantasy')">🔮 نقشه دنیای اساطیری</button>
+            <div class="section-group">
+                <div class="section-title">👥 کاراکترها، لباس‌ها و اشیاء</div>
+                <button class="btn-action" onclick="addEntityToCanvas('🐞', 'لیدی‌باگ', 'character')">🔴 لیدی‌باگ (قهرمان)</button>
+                <button class="btn-action" onclick="addEntityToCanvas('🐱', 'کت نوار', 'character')">🟢 کت نوار (همراه)</button>
+                <button class="btn-action" onclick="addEntityToCanvas('🛏️', 'تخت خواب', 'item')">🛏️ تخت خواب و مبلمان</button>
+                <button class="btn-action" onclick="addEntityToCanvas('🧸', 'اسباب‌بازی / وسایل', 'item')">🧸 اسباب‌بازی و لوازم</button>
+            </div>
 
-            <div class="section-title">👑 معجزه‌گرها و نژادها</div>
-            <button class="btn-custom btn-special" onclick="addItemIcon('🐞', 'معجزه گر کفش‌دوزک')">🔴 معجزه‌گر کفش‌دوزک (لیدی‌باگ)</button>
-            <button class="btn-custom btn-special" onclick="addItemIcon('🐱', 'معجزه گر گربه سیاه')">🟢 معجزه‌گر گربه سیاه (کت نوار)</button>
-            <button class="btn-custom btn-fantasy" onclick="addItemIcon('🧝‍♀️', 'نژاد الف')">🧝 الف گوش‌تیز</button>
-            <button class="btn-custom btn-dark" onclick="addItemIcon('🐾', 'نیمه‌انسان گربه‌ای')">🐱 نیمه‌انسان گوش‌دار</button>
-            <button class="btn-custom btn-dark" onclick="addItemIcon('😈', 'دیو باستانی')">👹 دیو و موجود شاخ‌دار</button>
-
-            <div class="section-title">🎬 سینما، مانهوا و صداگذاری AI</div>
-            <button class="btn-custom btn-ai" onclick="openManhwaModal()">📖 کتاب مانهوا و داستان بازی</button>
-            <button class="btn-custom btn-ai" onclick="openTVModal()">📺 تلویزیون و ویدیو بازی</button>
-            <button class="btn-custom btn-special" onclick="triggerMagicFX()">✨ افکت جادویی تصویری متحرک</button>
-            <button class="btn-custom btn-dark" onclick="triggerAIsound('laugh')">🤣 افکت خنده AI</button>
-            <button class="btn-custom btn-dark" onclick="triggerAIsound('cry')">😭 افکت گریه AI</button>
-            <button class="btn-custom btn-dark" onclick="triggerAIsound('fall')">💥 افکت افتادن بازی</button>
-
-            <div class="section-title">🌑 منطقه تاریک</div>
-            <button class="btn-custom" style="background: #263238;" onclick="spawnCreepyEntity()">👻 احضار موجود ترسناک</button>
+            <div class="section-group">
+                <div class="section-title">🎨 آپلود طرح اختصاصی (ایبیس‌پینت)</div>
+                <button class="btn-action" onclick="document.getElementById('fileUploader').click()">📁 آپلود عکس لباس / شخصیت / دکور</button>
+                <input type="file" id="fileUploader" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+            </div>
         </div>
 
         <!-- بوم اصلی بازی -->
-        <div class="canvas-area" id="gameCanvas" onclick="spawnClickFX(event)">
-            <div style="padding: 12px; color: #fff; font-weight: bold; position: relative; z-index: 20; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" id="statusText">
-                بازی آماده است! از دکمه بالا نقاشی ایبیس‌پینت رو آپلود کن یا آیتم بچین.
-            </div>
-            
-            <div class="spawned-item" style="top: 150px; left: 180px;" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)" title="لیدی‌باگ">🐞</div>
-            <div class="spawned-item" style="top: 150px; left: 280px;" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)" title="کت نوار">🐱</div>
-        </div>
-    </div>
-
-    <!-- مودال مانهوا -->
-    <div class="modal-overlay" id="manhwaModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeManhwaModal()">بستن X</button>
-            <h2>📖 کتاب مانهوا و داستان بازی</h2>
-            <div style="background: #12121a; padding: 15px; border-radius: 8px; border: 1px dashed #7b1fa2; margin-top: 10px;">
-                <textarea placeholder="متن مانهوا..." style="width: 100%; height: 90px; background: #222; color: #fff; border: 1px solid #444; border-radius: 5px; padding: 8px;"></textarea>
-                <button class="btn-custom btn-special" style="margin-top: 10px; width: auto;" onclick="alert('صفحه مانهوا ثبت شد!')">ذخیره در بازی</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- مودال تلویزیون -->
-    <div class="modal-overlay" id="tvModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeTVModal()">بستن X</button>
-            <h2>📺 تلویزیون و ویدیوهای بازی</h2>
-            <div style="text-align: center; background: #000; padding: 20px; border-radius: 8px; margin-top: 10px;">
-                <div style="font-size: 50px; margin-bottom: 10px;">🎞️</div>
-                <input type="text" placeholder="آدرس ویدیو..." style="width: 80%; display: inline-block;">
-                <br>
-                <button class="btn-custom" style="width: auto; display: inline-block;" onclick="alert('ویدیو پخش شد!')">پخش ویدیو</button>
-            </div>
+        <div class="workspace" id="gameCanvas">
+            <div class="status-bar" id="statusBar">خوش آمدید! روی دکمه‌ها بزنید یا ساختمان بسازید. روی هر ساختمان دو بار کلیک کنید تا وارد اتاق‌هایش شوید!</div>
         </div>
     </div>
 
     <script>
-        let currentLang = 'fa';
-        let zoomLevel = 1;
+        let currentLevel = "city"; // 'city' or building id
+        let currentBuildingName = "";
+        const worldData = {
+            buildings: [],
+            rooms: {} // buildingId -> array of rooms
+        };
 
-        // تابع هوشمند برای بارگذاری و آوردن عکس/نقاشی ایبیس‌پینت به بوم بازی
-        function loadIbisImage(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function updateStatusBar(msg) {
+            document.getElementById('statusBar').innerText = msg;
+        }
 
+        function goHomeMap() {
+            currentLevel = "city";
+            document.getElementById('navPath').innerText = "محیط: نمای اصلی شهر (World Map)";
+            document.getElementById('roomCreatorGroup').style.display = 'none';
+            renderCanvas();
+            updateStatusBar("به نمای اصلی شهر برگشتید.");
+        }
+
+        function addBuilding(icon, defaultName) {
+            if(currentLevel !== "city") return alert("فقط در نمای شهر می‌توانید ساختمان جدید بسازید!");
+            const input = document.getElementById('buildingNameInput');
+            let name = input.value.trim() || defaultName;
+            let id = 'b_' + Date.now();
+            
+            worldData.buildings.push({
+                id: id,
+                icon: icon,
+                name: name,
+                x: Math.random() * 350 + 50,
+                y: Math.random() * 250 + 50
+            });
+            worldData.rooms[id] = [
+                {id: 'r_1', name: 'اتاق اول / سالن', icon: '🚪', x: 100, y: 150},
+                {id: 'r_2', name: 'اتاق خواب', icon: '🛏️', x: 250, y: 150}
+            ];
+
+            input.value = '';
+            renderCanvas();
+            updateStatusBar(`ساختمان "${name}" با موفقیت در شهر ساخته شد. روی آن کلیک کنید تا وارد اتاق‌ها شوید!`);
+        }
+
+        function addRoomToBuilding() {
+            if(currentLevel === "city") return;
+            const input = document.getElementById('roomNameInput');
+            let name = input.value.trim() || 'اتاق جدید';
+            
+            if(!worldData.rooms[currentLevel]) worldData.rooms[currentLevel] = [];
+            worldData.rooms[currentLevel].push({
+                id: 'r_' + Date.now(),
+                name: name,
+                icon: '🚪',
+                x: Math.random() * 300 + 50,
+                y: Math.random() * 200 + 50
+            });
+            input.value = '';
+            renderRooms(currentLevel, currentBuildingName);
+            updateStatusBar(`اتاق "${name}" به این ساختمان اضافه شد.`);
+        }
+
+        function addEntityToCanvas(icon, name, type) {
+            const canvas = document.getElementById('gameCanvas');
+            const entity = document.createElement('div');
+            entity.className = 'game-entity';
+            entity.style.left = (Math.random() * 350 + 50) + 'px';
+            entity.style.top = (Math.random() * 250 + 50) + 'px';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'entity-icon';
+            iconDiv.innerHTML = icon;
+
+            const labelBox = document.createElement('div');
+            labelBox.className = 'entity-label-box';
+
+            const labelInput = document.createElement('input');
+            labelInput.type = 'text';
+            labelInput.className = 'entity-label';
+            labelInput.value = name;
+            labelInput.style.width = '70px';
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'delete-btn';
+            delBtn.innerHTML = '×';
+            delBtn.title = 'حذف';
+            delBtn.onclick = function() { entity.remove(); updateStatusBar('آیتم حذف شد.'); };
+
+            labelBox.appendChild(labelInput);
+            labelBox.appendChild(delBtn);
+            entity.appendChild(iconDiv);
+            entity.appendChild(labelBox);
+
+            makeDraggable(entity);
+            canvas.appendChild(entity);
+            updateStatusBar(`آیتم "${name}" اضافه شد. می‌توانید نامش را تغییر دهید یا جابجایش کنید.`);
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if(!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const imageUrl = e.target.result;
+            reader.onload = function(event) {
                 const canvas = document.getElementById('gameCanvas');
-                
-                const newItem = document.createElement('div');
-                newItem.className = 'spawned-item';
-                newItem.style.backgroundImage = `url('${imageUrl}')`;
-                newItem.innerHTML = ''; // بدون ایموجی، عکس نقاشی نمایش داده می‌شود
-                newItem.style.top = '150px';
-                newItem.style.left = '200px';
-                newItem.style.width = '90px';
-                newItem.style.height = '90px';
-                newItem.title = file.name;
+                const entity = document.createElement('div');
+                entity.className = 'game-entity';
+                entity.style.left = '150px';
+                entity.style.top = '150px';
 
-                newItem.addEventListener('mousedown', (e) => startDrag(e, newItem));
-                newItem.addEventListener('touchstart', (e) => startDrag(e, newItem), {passive: true});
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'entity-icon';
+                iconDiv.style.backgroundImage = `url('${event.target.result}')`;
 
-                canvas.appendChild(newItem);
-                document.getElementById('statusText').innerText = `🎨 نقاشی "${file.name}" از ایبیس‌پینت با موفقیت وارد بازی شد و قابل چیدمان است!`;
+                const labelBox = document.createElement('div');
+                labelBox.className = 'entity-label-box';
+
+                const labelInput = document.createElement('input');
+                labelInput.type = 'text';
+                labelInput.className = 'entity-label';
+                labelInput.value = 'طراحی من';
+                labelInput.style.width = '70px';
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.innerHTML = '×';
+                delBtn.onclick = function() { entity.remove(); };
+
+                labelBox.appendChild(labelInput);
+                labelBox.appendChild(delBtn);
+                entity.appendChild(iconDiv);
+                entity.appendChild(labelBox);
+
+                makeDraggable(entity);
+                canvas.appendChild(entity);
+                updateStatusBar('طراحی شما از گالری وارد بازی شد!');
             };
             reader.readAsDataURL(file);
-            event.target.value = ''; // ریست کردن اینپوت
         }
 
-        function createCustomRoomFromUI() {
-            const input = document.getElementById('newRoomNameInput');
-            const roomName = input.value.trim();
-            if(!roomName) {
-                alert('لطفاً نام اتاق را وارد کنید!');
-                return;
-            }
-            const randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
-            const randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
-            addNewRoom(roomName, `linear-gradient(135deg, ${randomColor1}, ${randomColor2})`);
-            input.value = '';
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'fa' ? 'en' : 'fa';
-            if(currentLang === 'en') {
-                document.getElementById('ui-title').innerText = "DANI WORLD ENGINE STUDIO";
-                document.getElementById('ui-subtitle').innerText = "Game Studio with IbisPaint Importer";
-                document.getElementById('lang-btn-text').innerText = "فارسی / English";
-                document.getElementById('statusText').innerText = "Ready! Upload your IbisPaint art from above.";
-            } else {
-                document.getElementById('ui-title').innerText = "DANI WORLD ENGINE STUDIO";
-                document.getElementById('ui-subtitle').innerText = "موتور بازی‌سازی همراه با ابزار آپلود و ورود نقاشی‌های ایبیس‌پینت";
-                document.getElementById('lang-btn-text').innerText = "English / فارسی";
-                document.getElementById('statusText').innerText = "بازی آماده است! از دکمه بالا نقاشی ایبیس‌پینت رو آپلود کن یا آیتم بچین.";
-            }
-        }
-
-        function installAppPrompt() {
-            alert('برای نصب روی گوشی:\n۱. منوی مرورگر را باز کنید.\n۲. گزینه "افزودن به صفحه اصلی" (Add to Home screen) را بزنید.');
-        }
-
-        function adjustZoom(amount) {
-            zoomLevel += amount;
-            if(zoomLevel < 0.7) zoomLevel = 0.7;
-            if(zoomLevel > 1.4) zoomLevel = 1.4;
-            document.getElementById('gameCanvas').style.transform = `scale(${zoomLevel})`;
-            document.getElementById('gameCanvas').style.transformOrigin = 'center center';
-        }
-
-        function addNewRoom(roomName, bgStyle) {
+        function renderCanvas() {
             const canvas = document.getElementById('gameCanvas');
-            canvas.style.background = bgStyle;
-            canvas.innerHTML = `<div style="padding: 12px; color: #fff; font-weight: bold; position: relative; z-index: 20; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" id="statusText">شما وارد مکان "${roomName}" شدید!</div>`;
-            addItemIcon('🏠', roomName);
-        }
-
-        function switchWorldMap(worldType) {
-            const canvas = document.getElementById('gameCanvas');
-            if(worldType === 'fantasy') {
-                canvas.style.background = 'linear-gradient(135deg, #280b3d, #0f051d)';
-                canvas.innerHTML = `<div style="padding: 12px; color: #fff; font-weight: bold; position: relative; z-index: 20;" id="statusText">🗺️ نقشه اساطیری فعال شد.</div>`;
-                addItemIcon('🏰', 'قلعه');
-            } else {
-                canvas.style.background = 'linear-gradient(135deg, #0d47a1, #1a237e)';
-                canvas.innerHTML = `<div style="padding: 12px; color: #fff; font-weight: bold; position: relative; z-index: 20;" id="statusText">🗺️ نقشه انسان‌ها فعال شد.</div>`;
-                addItemIcon('🏙️', 'شهر');
-            }
-        }
-
-        function addItemIcon(icon, name) {
-            const canvas = document.getElementById('gameCanvas');
-            const newItem = document.createElement('div');
-            newItem.className = 'spawned-item';
-            newItem.innerHTML = icon;
-            newItem.style.top = (Math.random() * 350 + 60) + 'px';
-            newItem.style.left = (Math.random() * 450 + 60) + 'px';
-            newItem.title = name;
+            canvas.innerHTML = '';
             
-            newItem.addEventListener('mousedown', (e) => startDrag(e, newItem));
-            newItem.addEventListener('touchstart', (e) => startDrag(e, newItem), {passive: true});
+            worldData.buildings.forEach(b => {
+                const entity = document.createElement('div');
+                entity.className = 'game-entity';
+                entity.style.left = b.x + 'px';
+                entity.style.top = b.y + 'px';
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'entity-icon';
+                iconDiv.innerHTML = b.icon;
+                // Double click or tap to enter building
+                iconDiv.ondblclick = () => enterBuilding(b.id, b.name);
+                iconDiv.onclick = () => enterBuilding(b.id, b.name);
+
+                const labelBox = document.createElement('div');
+                labelBox.className = 'entity-label-box';
+
+                const labelInput = document.createElement('input');
+                labelInput.type = 'text';
+                labelInput.className = 'entity-label';
+                labelInput.value = b.name;
+                labelInput.style.width = '80px';
+                labelInput.onchange = (e) => { b.name = e.target.value; };
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.innerHTML = '×';
+                delBtn.onclick = function() {
+                    worldData.buildings = worldData.buildings.filter(item => item.id !== b.id);
+                    renderCanvas();
+                    updateStatusBar('ساختمان حذف شد.');
+                };
+
+                labelBox.appendChild(labelInput);
+                labelBox.appendChild(delBtn);
+                entity.appendChild(iconDiv);
+                entity.appendChild(labelBox);
+
+                makeDraggable(entity);
+                canvas.appendChild(entity);
+            });
+        }
+
+        function enterBuilding(bId, bName) {
+            currentLevel = bId;
+            currentBuildingName = bName;
+            document.getElementById('navPath').innerText = `محیط: داخل ساختمان (${bName})`;
+            document.getElementById('roomCreatorGroup').style.display = 'block';
+            renderRooms(bId, bName);
+            updateStatusBar(`وارد ساختمان "${bName}" شدید. روی هر اتاق کلیک کنید یا اتاق جدید بسازید.`);
+        }
+
+        function renderRooms(bId, bName) {
+            const canvas = document.getElementById('gameCanvas');
+            canvas.innerHTML = '';
             
-            canvas.appendChild(newItem);
-            document.getElementById('statusText').innerText = `آیتم "${name}" اضافه شد!`;
+            if(!worldData.rooms[bId]) worldData.rooms[bId] = [];
+
+            worldData.rooms[bId].forEach(r => {
+                const entity = document.createElement('div');
+                entity.className = 'game-entity';
+                entity.style.left = r.x + 'px';
+                entity.style.top = r.y + 'px';
+
+                const iconDiv = document.createElement('div');
+                iconDiv.className.id = r.id;
+                iconDiv.className = 'entity-icon';
+                iconDiv.innerHTML = r.icon;
+                iconDiv.onclick = () => alert(`شما اکنون داخل "${r.name}" از ساختمان "${bName}" هستید! می‌تونی وسایل و کاراکترها رو بچینی.`);
+
+                const labelBox = document.createElement('div');
+                labelBox.className = 'entity-label-box';
+
+                const labelInput = document.createElement('input');
+                labelInput.type = 'text';
+                labelInput.className = 'entity-label';
+                labelInput.value = r.name;
+                labelInput.style.width = '80px';
+                labelInput.onchange = (e) => { r.name = e.target.value; };
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.innerHTML = '×';
+                delBtn.onclick = function() {
+                    worldData.rooms[bId] = worldData.rooms[bId].filter(item => item.id !== r.id);
+                    renderRooms(bId, bName);
+                    updateStatusBar('اتاق حذف شد.');
+                };
+
+                labelBox.appendChild(labelInput);
+                labelBox.appendChild(delBtn);
+                entity.appendChild(iconDiv);
+                entity.appendChild(labelBox);
+
+                makeDraggable(entity);
+                canvas.appendChild(entity);
+            });
         }
 
-        function spawnCreepyEntity() {
-            const canvas = document.getElementById('gameCanvas');
-            canvas.style.background = '#050508';
-            const entity = document.createElement('div');
-            entity.className = 'spawned-item';
-            entity.innerHTML = '👁️‍🗨️';
-            entity.style.top = '200px';
-            entity.style.left = '300px';
-            entity.style.filter = 'drop-shadow(0 0 15px red)';
-            canvas.appendChild(entity);
-            document.getElementById('statusText').innerText = "⚠️ موجود ترسناک ظاهر شد!";
-        }
+        function makeDraggable(elm) {
+            let startX = 0, startY = 0, initialX = 0, initialY = 0;
+            elm.addEventListener('pointerdown', pointerDown, false);
 
-        function triggerMagicFX() {
-            const canvas = document.getElementById('gameCanvas');
-            for(let i=0; i<5; i++) {
-                setTimeout(() => {
-                    const fx = document.createElement('div');
-                    fx.className = 'magical-fx';
-                    fx.innerHTML = ['✨', '💫', '🌟', '🔮', '⚡'][Math.floor(Math.random()*5)];
-                    fx.style.top = (Math.random() * 400 + 100) + 'px';
-                    fx.style.left = (Math.random() * 600 + 100) + 'px';
-                    canvas.appendChild(fx);
-                    setTimeout(() => fx.remove(), 1500);
-                }, i * 200);
-            }
-            document.getElementById('statusText').innerText = "✨ افکت جادویی اجرا شد!";
-        }
-
-        function triggerAIsound(type) {
-            document.getElementById('statusText').innerText = `🔊 پخش افکت صوتی: ${type}`;
-        }
-
-        function spawnClickFX(e) {
-            if(e.target.id === 'gameCanvas') {
-                const canvas = document.getElementById('gameCanvas');
-                const fx = document.createElement('div');
-                fx.className = 'magical-fx';
-                fx.innerHTML = '✨';
-                const rect = canvas.getBoundingClientRect();
-                fx.style.top = (e.clientY - rect.top) + 'px';
-                fx.style.left = (e.clientX - rect.left) + 'px';
-                canvas.appendChild(fx);
-                setTimeout(() => fx.remove(), 1200);
-            }
-        }
-
-        function openManhwaModal() { document.getElementById('manhwaModal').style.display = 'flex'; }
-        function closeManhwaModal() { document.getElementById('manhwaModal').style.display = 'none'; }
-        function openTVModal() { document.getElementById('tvModal').style.display = 'flex'; }
-        function closeTVModal() { document.getElementById('tvModal').style.display = 'none'; }
-
-        function startDrag(e, item) {
-            let isDragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            let startX = clientX - item.offsetLeft;
-            let startY = clientY - item.offsetTop;
-
-            function drag(e) {
-                if (!isDragging) return;
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                let newX = clientX - startX;
-                let newY = clientY - startY;
-                const canvas = document.getElementById('gameCanvas');
-                if (newX < 0) newX = 0;
-                if (newY < 0) newY = 0;
-                if (newX > canvas.clientWidth - item.clientWidth) newX = canvas.clientWidth - item.clientWidth;
-                if (newY > canvas.clientHeight - item.clientHeight) newY = canvas.clientHeight - item.clientHeight;
-                item.style.left = newX + 'px';
-                item.style.top = newY + 'px';
+            function pointerDown(e) {
+                if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+                e.preventDefault();
+                initialX = e.clientX;
+                initialY = e.clientY;
+                document.addEventListener('pointermove', pointerMove, false);
+                document.addEventListener('pointerup', pointerUp, false);
             }
 
-            function stopDrag() {
-                isDragging, isDragging = false;
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('touchmove', drag);
-                document.removeEventListener('mouseup', stopDrag);
-                document.removeEventListener('touchend', stopDrag);
+            function pointerMove(e) {
+                e.preventDefault();
+                startX = initialX - e.clientX;
+                startY = initialY - e.clientY;
+                initialX = e.clientX;
+                initialY = e.clientY;
+                elm.style.top = (elm.offsetTop - startY) + "px";
+                elm.style.left = (elm.offsetLeft - startX) + "px";
             }
 
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag, {passive: true});
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchend', stopDrag);
+            function pointerUp() {
+                document.removeEventListener('pointermove', pointerMove, false);
+                document.removeEventListener('pointerup', pointerUp, false);
+            }
         }
+
+        window.onload = function() {
+            addBuilding('🏙️', 'شهر مرکزی');
+        };
     </script>
 </body>
 </html>
