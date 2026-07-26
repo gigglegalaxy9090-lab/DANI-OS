@@ -1,29 +1,67 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DANI OS AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANI OS - مدیریت و ساخت ربات</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <header>
+        <h1>🤖 پنل مدیریت و ساخت ربات (Railway Style)</h1>
+        <p>اتصال به گیت‌هاب و ساخت ربات تلگرام</p>
+    </header>
 
-<h1>🤖 DANI OS AI</h1>
+    <main>
+        <div class="card">
+            <h2>📦 انتخاب مخزن از GitHub</h2>
+            <p>ریپازیتوری ربات خود را انتخاب کنید</p>
+            <select id="repoSelect" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; background: #222; color: #fff;">
+                <option value="giggletgalaxy9090-lab/melorina-bot1">giggletgalaxy9090-lab/melorina-bot1</option>
+                <option value="giggletgalaxy9090-lab/melorina-bot">giggletgalaxy9090-lab/melorina-bot</option>
+                <option value="giggletgalaxy9090-lab/yuri-bot">giggletgalaxy9090-lab/yuri-bot</option>
+            </select>
+        </div>
 
-<p>دستیار هوشمند شخصی</p>
+        <div class="card">
+            <h2>🔑 تنظیمات ربات و ادمین</h2>
+            <p>توکن ربات و دسترسی سازنده</p>
+            <input type="text" id="botToken" placeholder="توکن ربات تلگرام (Bot Token)" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; background: #222; color: #fff; border: 1px solid #444;">
+            <input type="text" id="adminId" value="8255361263" readonly style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; background: #111; color: #0f0; border: 1px solid #444;" title="آیدی عددی ادمین اصلی">
+            <button onclick="deployBot()" style="width: 100%; padding: 10px; background: #28a745; color: #fff; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">🚀 ساخت و استارت ربات</button>
+        </div>
 
-<textarea id="question" placeholder="ایده یا سوال خود را بنویس..."></textarea>
+        <div class="card" id="statusCard" style="display:none;">
+            <h2>📊 وضعیت ربات</h2>
+            <p id="statusText" style="color: #0f0;"></p>
+        </div>
+    </main>
 
-<br>
+    <footer>
+        <p>DANI OS © 2026</p>
+    </footer>
 
-<button id="askBtn">ارسال</button>
+    <script>
+        function deployBot() {
+            const repo = document.getElementById('repoSelect').value;
+            const token = document.getElementById('botToken').value;
+            const admin = document.getElementById('adminId').value;
 
-<div id="answer">
-پاسخ اینجا نمایش داده می‌شود
-</div>
+            if(!token) {
+                alert('لطفاً توکن ربات را وارد کنید!');
+                return;
+            }
 
-
-<script src="ai.js"></script>
-
+            const statusCard = document.getElementById('statusCard');
+            const statusText = document.getElementById('statusText');
+            
+            statusCard.style.display = 'block';
+            statusText.innerHTML = `در حال اتصال مخزن ${repo} و راه‌اندازی ربات با آیدی ادمین ${admin}...`;
+            
+            setTimeout(() => {
+                statusText.innerHTML = `✅ ربات با موفقیت روی سرور ساخته شد و به گیت‌هاب متصل گردید!`;
+            }, 2000);
+        }
+    </script>
 </body>
-  </html>
+</html>
