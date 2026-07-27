@@ -1,6 +1,6 @@
 // DANI OS GitHub Authentication
 
-const githubClientId = "YOUR_GITHUB_CLIENT_ID";
+const githubClientId = "Ov23liug4olPr0d6u20A";
 
 
 function connectGitHubAccount() {
